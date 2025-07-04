@@ -16,7 +16,6 @@
       overflow: hidden;
     }
 
-    /* Top white bar */
     .top-bar {
       background-color: white;
       height: 80px;
@@ -53,24 +52,42 @@
       cursor: pointer;
       outline: none;
       transition: transform 0.2s ease;
-      background-color: white;
       background-position: center;
       background-repeat: no-repeat;
+      background-size: cover;
     }
 
-    .tv-button.logo1 {
-      background-image: url('https://i.postimg.cc/2jhQFbVK/image.png');
-      background-size: contain;
+    .tv-button.img1 {
+      background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHfWPjp_xs3D5hQ8xizPsxD7lOHGy3YrxDrg&s');
     }
 
-    .tv-button.logo2 {
-      background-image: url('https://cdn.freebiesupply.com/logos/large/2x/the-avengers-logo-black-and-white.png');
-      background-size: 80%;
+    .tv-button.img2 {
+      background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOPN6_0CWq9NwD-uOEoKk-r2bCn0Pr1NVh9A&s');
     }
 
     .tv-button:focus {
       box-shadow: 0 0 10px 5px rgba(255,255,255,0.8);
       transform: scale(1.05);
+    }
+
+    .video-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .video-overlay video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: black;
     }
   </style>
 </head>
@@ -80,8 +97,38 @@
   </div>
 
   <div class="container">
-    <button class="tv-button logo1" tabindex="1"></button>
-    <button class="tv-button logo2" tabindex="2"></button>
+    <button class="tv-button img1" tabindex="1" onclick="playVideo(1)"></button>
+    <button class="tv-button img2" tabindex="2" onclick="playVideo(2)"></button>
   </div>
+
+  <!-- Video Overlay -->
+  <div class="video-overlay" id="videoOverlay">
+    <video id="videoPlayer" controls autoplay></video>
+  </div>
+
+  <script>
+    function playVideo(buttonNumber) {
+      const videoOverlay = document.getElementById("videoOverlay");
+      const videoPlayer = document.getElementById("videoPlayer");
+
+      const videoURLs = {
+        1: "https://hk1.shegu.net/free/p1/movie_mp4_h264/2004/4/9/4139/movie.4139.2004.1080p.H264.20190904115356.mp4?KEY1=XYWhPslSNetK_W2BdIPRCw&KEY2=1751643138&KEY3=0&KEY4=world&KEY5=Harry.Potter.And.The.Prisoner.Of.Azkaban.2004.1080p.BluRay.H264.AAC-RARBG.mp4&KEY7=febbox_file_download_v2&KEY8=0",
+        2: "https://hk1.shegu.net/free/p1/movie_mp4_h264/2005/4/4/4134/movie.4134.2005.720p.H264.20250227014103.mp4?KEY1=u6NN-V-whVRbyeyoGqP4Kw&KEY2=1751643220&KEY3=0&KEY4=world&KEY5=Harry.Potter.and.the.Goblet.of.Fire.2005.Eng.Fre.Ger.Ita.Por.Spa.Cze.Pol.Jpn.2160p.BluRay.Hybrid.Remux.DV.HDR.HEVC.DTS.X-SGF.mkv&KEY7=febbox_file_download_v2&KEY8=0"
+      };
+
+      videoPlayer.src = videoURLs[buttonNumber];
+      videoOverlay.style.display = "flex";
+
+      // ESC key closes the video overlay
+      document.addEventListener("keydown", function escListener(e) {
+        if (e.key === "Escape") {
+          videoOverlay.style.display = "none";
+          videoPlayer.pause();
+          videoPlayer.src = "";
+          document.removeEventListener("keydown", escListener);
+        }
+      });
+    }
+  </script>
 </body>
 </html>
